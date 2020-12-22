@@ -3,9 +3,9 @@ package rtfour;
 public class Node {
     private Node previous;
     private Node next;
-    private String data;
+    private Object data;
 
-    public Node(String data){
+    public Node(Object data){
         this.data = data;
     }
 
@@ -29,7 +29,7 @@ public class Node {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(Object data) {
         this.data = data;
     }
 }
