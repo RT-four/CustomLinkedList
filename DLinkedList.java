@@ -1,7 +1,5 @@
 package rtfour;
 
-import java.util.function.DoublePredicate;
-
 public class DLinkedList {
     private Node tail;
     private Node head;
@@ -16,11 +14,11 @@ public class DLinkedList {
     }
 
     public void addLast(Object data) {
+        Node operativeNode = new Node(data);
         if (isEmpty()) {
-            head = new Node(data);
+            head = operativeNode;
             tail = head;
         } else {
-            Node operativeNode = new Node(data);
             operativeNode.setPrevious(head);
             head.setNext(operativeNode);
             head = operativeNode;
@@ -37,22 +35,28 @@ public class DLinkedList {
     public void addInOrder(Object data) {
         Node operativeNode = tail;
         Node newNode = new Node(data);
-        System.out.println(operativeNode.getData().toString().compareTo(data.toString()));
-        while (operativeNode != null) {
-            System.out.println(operativeNode.getData().toString().compareTo(data.toString()));
-            if (operativeNode.getData().toString().compareTo(data.toString()) == 0) {
-                break;
-            } else if (operativeNode.getData().toString().compareTo(data.toString()) > 0) {
-                addBeforeExistingNode(operativeNode, newNode);
-                break;
-            } else if (operativeNode.getNext() == null) {
-                addLast(newNode);
-                break;
+        if (isEmpty()) {
+            addLast(data);
+        } else {
+            while (operativeNode != null) {
+                if (newNode.getData().toString().compareTo(operativeNode.getData().toString()) < 0) {
+                    addBeforeExistingNode(operativeNode, newNode);
+                    break;
+                }
+                if (operativeNode.getNext() != null) {
+                    if (newNode.getData().toString().compareTo(operativeNode.getNext().getData().toString()) < 0) {
+                        addAfterExistingNode(operativeNode, newNode);
+                        break;
+                    }
+                } else if (operativeNode.getNext() == null) {
+                    addLast(data);
+                    break;
+                }
+                operativeNode = operativeNode.getNext();
             }
-            operativeNode = operativeNode.getNext();
         }
-    }
 
+    }
 
     public void addBeforeExistingNode(Node existingNode, Node newNode) {
         newNode.setNext(existingNode);
@@ -69,8 +73,8 @@ public class DLinkedList {
     public void addAfterExistingNode(Node existingNode, Node newNode) {
         newNode.setPrevious(existingNode);
         if (existingNode.getNext() != null) {
-            newNode.setNext(existingNode.getNext());
             existingNode.getNext().setPrevious(newNode);
+            newNode.setNext(existingNode.getNext());
         } else {
             head = newNode;
         }
@@ -83,6 +87,18 @@ public class DLinkedList {
 
     public Node getHead() {
         return head;
+    }
+
+    public Node findNode(Object data) {
+        Node operativeNode = tail;
+        while (operativeNode != null) {
+            if (operativeNode.getData() == data) {
+                return operativeNode;
+            }
+            operativeNode = operativeNode.getNext();
+        }
+        return null;
+
     }
 
     public void print() {
